@@ -13,16 +13,16 @@ createRoot(document.getElementById("root")).render(
     <BrowserRouter>
       <Routes>
         <Route path="/welcome" element={<Welcome />} />
-        <Route path="*" element={<NotFound />} />
         <Route path="/" element={<App />}>
           {/* public pages */}
           <Route index path="/" element={<Home />} />
-          
+
           <Route element={<AuthLayout authentication={false} />}>
             {/* private pages */}
           </Route>
           <Route path="*" element={<NotFound />} />
         </Route>
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   </StrictMode>
