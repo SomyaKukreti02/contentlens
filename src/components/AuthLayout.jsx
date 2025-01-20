@@ -1,17 +1,18 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, Outlet } from "react-router";
-import Loading from "../pages/Loading";
+import useUserStore from "@/store/userStore";
+import Loading from "@/pages/Loading";
 
-export default function Protected({ authentication = false }) {
+export default function Protected() {
   const navigate = useNavigate();
   const [loader, setLoader] = useState(true);
-
+  const { user, authenticated } = useUserStore();
   useEffect(() => {
-    if (authentication == false) {
-      navigate("/welcome");
+    // console.log("user", user, authenticated);
+    if (!user && !authenticated) {
+      navigate("/");
     }
     setLoader(false);
-  }, [navigate, authentication]);
-
+  }, [user, authenticated]);
   return loader ? <Loading /> : <Outlet />;
 }
