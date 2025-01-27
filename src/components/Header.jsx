@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
 import GoogleLoginButton from "@/components/GoogleLoginButton";
-import { signOut, getSession } from "@/supabase/auth";
+import { signOut } from "@/supabase/auth";
 import useUserStore from "@/store/userStore";
 import { Link } from "react-router";
+import ThemeSwitcher from "./ThemeSwitcher";
 const Header = () => {
   const { logout, user } = useUserStore();
   const handleLogout = async () => {
@@ -11,7 +11,7 @@ const Header = () => {
   };
 
   return (
-    <header className="navbar bg-primary mt-4 sticky top-4">
+    <header className="navbar bg-primary mt-4 text-primary-content">
       <div className="flex-1">
         <div className="dropdown">
           <div tabIndex={0} role="button" className="btn btn-ghost btn-circle">
@@ -50,13 +50,14 @@ const Header = () => {
         </Link>
       </div>
       <div className="flex-none gap-2">
-        <div className="form-control">
+        {/* <div className="form-control">
           <input
             type="text"
             placeholder="Search"
             className="input input-bordered w-32 md:w-auto"
           />
-        </div>
+        </div> */}
+        <ThemeSwitcher />
         {!user && <GoogleLoginButton />}
         {user && (
           <div className="dropdown dropdown-end">
