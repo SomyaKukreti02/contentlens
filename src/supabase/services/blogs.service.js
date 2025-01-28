@@ -1,5 +1,5 @@
 import { supabase } from "@/supabase/client";
-import { getSession } from "@/supabase/auth";
+import { getSession } from "@/supabase/services/auth.service";
 
 // Get author details
 const getAuthor = async () => {

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { signInWithOAuth, getSession } from "@/supabase/auth";
+import { signInWithOAuth, getSession } from "@/supabase/services/auth.service";
 import useUserStore from "@/store/userStore";
 const GoogleLoginButton = () => {
   const [loading, setLoading] = useState(false);

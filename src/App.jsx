@@ -5,7 +5,7 @@ import Footer from "@/components/Footer";
 import Loading from "@/pages/Loading";
 import { Outlet } from "react-router";
 import useUserStore from "@/store/userStore";
-import { getSession } from "@/supabase/auth";
+import { getSession } from "@/supabase/services/auth.service";
 
 const App = () => {
   const { login } = useUserStore();

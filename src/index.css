@@ -4,6 +4,10 @@
 @tailwind utilities;
 
 @layer base {
+  html {
+    background-image: url("@/assets/background.svg");
+    background-repeat: repeat;
+  }
   body {
     font-family: "Nunito Sans", serif;
     font-optical-sizing: auto;

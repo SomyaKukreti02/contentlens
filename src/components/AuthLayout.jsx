@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, Outlet } from "react-router";
 import useUserStore from "@/store/userStore";
 import Loading from "@/pages/Loading";
-import { getSession } from "@/supabase/auth";
+import { getSession } from "@/supabase/services/auth.service";
 
 export default function Protected() {
   const navigate = useNavigate();

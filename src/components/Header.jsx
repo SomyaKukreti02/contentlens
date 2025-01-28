@@ -1,5 +1,5 @@
 import GoogleLoginButton from "@/components/GoogleLoginButton";
-import { signOut } from "@/supabase/auth";
+import { signOut } from "@/supabase/services/auth.service";
 import useUserStore from "@/store/userStore";
 import { Link } from "react-router";
 const Header = () => {
