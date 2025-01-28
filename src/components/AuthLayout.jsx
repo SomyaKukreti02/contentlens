@@ -4,7 +4,7 @@ import useUserStore from "@/store/userStore";
 import Loading from "@/pages/Loading";
 import { getSession } from "@/supabase/services/auth.service";
 
-export default function Protected() {
+const Protected = () => {
   const navigate = useNavigate();
   const [loader, setLoader] = useState(true);
   const { user, login } = useUserStore();
@@ -20,4 +20,6 @@ export default function Protected() {
     setLoader(false);
   }, []);
   return loader ? <Loading /> : <Outlet />;
-}
+};
+
+export default Protected;
