@@ -1,19 +1,18 @@
-import { useState, useEffect } from "react";
-import supabase from "@/supabase/client";
+import { useEffect, useState } from "react";
+import { getActiveBlogs } from "@/supabase/services/blogs.service";
 const Home = () => {
   const [blogs, setBlogs] = useState([]);
 
+  const fetchBlogs = async () => {
+    const data = await getActiveBlogs();
+    setBlogs(data);
+  };
   useEffect(() => {
-    getBlogs();
+    fetchBlogs();
   }, []);
 
-  async function getBlogs() {
-    const { data } = await supabase.from("blogs").select();
-    setBlogs(data);
-  }
   return (
     <div>
-      <h1>Home</h1>
       <ul>
         {blogs.map((blog) => (
           <li key={blog.slug}>{blog.title}</li>

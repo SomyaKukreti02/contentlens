@@ -1,4 +1,4 @@
-import { supabase } from "@/supabase/client";
+import supabase from "@/supabase/client";
 import { getSession } from "@/supabase/services/auth.service";
 
 // Get author details
@@ -9,12 +9,10 @@ const getAuthor = async () => {
       throw new Error("You need to be signed in to get author details");
     }
     const author = {
-      id: session.user.id,
-      aud: session.user.aud,
-      role: session.user.role,
-      email: session.user.email,
-      full_name: session.user.user_metadata.full_name,
-      avatar_url: session.user.user_metadata.avatar_url,
+      author: session.user.user_metadata.full_name,
+      author_id: session.user.id,
+      author_email: session.user.email,
+      author_avatar_url: session.user.user_metadata.avatar_url,
     };
     return author;
   } catch (error) {
@@ -25,45 +23,144 @@ const getAuthor = async () => {
 // Create a new blog
 const createBlog = async ({ title, slug, description, banner_url, status }) => {
   try {
-  } catch (error) {}
+    const { author, author_avatar_url, author_id, author_email } =
+      await getAuthor();
+    const { data, error } = await supabase
+      .from("blogs")
+      .insert({
+        title,
+        slug,
+        description,
+        banner_url,
+        status,
+        author,
+        author_avatar_url,
+        author_id,
+        author_email,
+      })
+      .select();
+    if (error) {
+      throw new Error(error.message);
+    }
+    return data;
+  } catch (error) {
+    console.error("Error creating blog:", error.message);
+  }
 };
 
 // Update a blog
-const updateBlog = async ({}) => {
+const updateBlog = async (
+  id,
+  { title, slug, description, banner_url, status }
+) => {
   try {
-  } catch (error) {}
+    const { data, error } = await supabase
+      .from("blogs")
+      .update({
+        title,
+        slug,
+        description,
+        banner_url,
+        status,
+      })
+      .eq("id", id)
+      .select();
+    if (error) {
+      throw new Error(error.message);
+    }
+    return data;
+  } catch (error) {
+    console.error("Error updating blog:", error.message);
+  }
 };
 
 // Delete a blog
-const deleteBlog = async (slug) => {
+const deleteBlog = async (id) => {
   try {
-  } catch (error) {}
+    const { data, error } = await supabase
+      .from("blogs")
+      .delete()
+      .eq("id", id)
+      .select();
+    if (error) {
+      throw new Error(error.message);
+    }
+    return data;
+  } catch (error) {
+    console.error("Error updating blog:", error.message);
+  }
 };
 
-// Read all blogs
-const getBlogs = async () => {
+// Read  blogs
+const getActiveBlogs = async () => {
   try {
-  } catch (error) {}
+    const { data, error } = await supabase
+      .from("blogs")
+      .select()
+      .eq("status", "active")
+      .order("updated_at", { ascending: false });
+    if (error) {
+      throw new Error(error.message);
+    }
+    return data;
+  } catch (error) {
+    console.error("Error getting active blogs:", error.message);
+  }
+};
+
+// Read User's blogs
+const getAuthorBlogs = async (id) => {
+  try {
+    const { data, error } = await supabase
+      .from("blogs")
+      .select()
+      .eq("author_id", id)
+      .order("updated_at", { ascending: false });
+    if (error) {
+      throw new Error(error.message);
+    }
+    return data;
+  } catch (error) {
+    console.error("Error getting user blogs:", error.message);
+  }
 };
 
 // Read a single blog
-const getBlogBySlug = async (slug) => {
+const getBlog = async (id) => {
   try {
-  } catch (error) {}
+    const { data, error } = await supabase.from("blogs").select().eq("id", id);
+    if (error) {
+      throw new Error(error.message);
+    }
+    return data;
+  } catch (error) {
+    console.error("Error getting user blogs:", error.message);
+  }
 };
 
 // check if slug is unique
 const isSlugUnique = async (slug) => {
   try {
-  } catch (error) {}
+    const { data, error } = await supabase
+      .from("blogs")
+      .select()
+      .eq("slug", slug);
+    if (error) {
+      throw new Error(error.message);
+    }
+    return data.length === 0;
+  } catch (error) {
+    console.error("Error getting user blogs:", error.message);
+  }
 };
 
 export {
   createBlog,
   updateBlog,
   deleteBlog,
-  getBlogs,
-  getBlogBySlug,
+  getActiveBlogs,
+  getAuthorBlogs,
+  getBlog,
   isSlugUnique,
   getAuthor,
 };
