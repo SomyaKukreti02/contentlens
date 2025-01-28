@@ -20,7 +20,7 @@ const App = () => {
     setLoading(false);
   }, []);
   return (
-    <div className="container mx-auto px-2">
+    <div className="container mx-auto px-2 relative">
       <Header />
       <main className="min-h-screen">{loading ? <Loading /> : <Outlet />}</main>
       <Footer />

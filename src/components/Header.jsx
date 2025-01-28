@@ -1,9 +1,8 @@
 import GoogleLoginButton from "@/components/GoogleLoginButton";
 import { signOut } from "@/supabase/auth";
 import useUserStore from "@/store/userStore";
-import { Link, useNavigate } from "react-router";
+import { Link } from "react-router";
 const Header = () => {
-  const navigate = useNavigate();
   const { logout, user } = useUserStore();
   const initials = user?.full_name
     .split(" ")
@@ -12,7 +11,7 @@ const Header = () => {
   const handleLogout = async () => {
     await signOut();
     logout();
-    navigate("/", { replace: true });
+    window.location.reload();
   };
 
   return (
@@ -65,7 +64,7 @@ const Header = () => {
               role="button"
               className="btn btn-ghost btn-circle avatar"
             >
-              <div className="w-10 rounded-full">
+              <div className="rounded-full">
                 <img
                   alt={initials || "JD"}
                   src={
@@ -77,8 +76,11 @@ const Header = () => {
             </div>
             <ul
               tabIndex={0}
-              className="menu menu-md  dropdown-content bg-base-100 text-base-content rounded-box z-[1] mt-3 w-52 p-2 shadow"
+              className="menu menu-md dropdown-content bg-base-100 text-base-content rounded-box z-[1] mt-3 w-52 p-2 shadow"
             >
+              <div>Hi, {user.full_name} 👋</div>
+              <div className="text-sm opacity-50">{user.email}</div>
+              <div className="divider"></div>
               <li>
                 <Link to="/profile" className="justify-between">
                   Profile
