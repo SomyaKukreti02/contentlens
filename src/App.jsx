@@ -8,18 +8,13 @@ import useUserStore from "@/store/userStore";
 import { getSession } from "@/supabase/auth";
 
 const App = () => {
-  const { user, login } = useUserStore();
+  const { login } = useUserStore();
   const [loading, setLoading] = useState(false);
   useEffect(() => {
     setLoading(true);
-    if (user) {
-      // console.log("User", user);
-      setLoading(false);
-      return;
-    }
-    getSession().then((data) => {
-      if (data) {
-        login(data?.session?.user?.user_metadata);
+    getSession().then((session) => {
+      if (session) {
+        login(session?.user?.user_metadata);
       }
     });
     setLoading(false);

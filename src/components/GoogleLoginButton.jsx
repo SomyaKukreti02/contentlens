@@ -9,10 +9,9 @@ const GoogleLoginButton = () => {
     setLoading(true);
     try {
       await signInWithOAuth("google");
-      const data = await getSession();
-      // console.log(data);
-      if (data) {
-        login(data?.session?.user.user_metadata);
+      const session = await getSession();
+      if (session) {
+        login(session?.user?.user_metadata);
       }
     } catch (error) {
       console.error("Error during google login:", error);

@@ -2,17 +2,22 @@ import { useEffect, useState } from "react";
 import { useNavigate, Outlet } from "react-router";
 import useUserStore from "@/store/userStore";
 import Loading from "@/pages/Loading";
+import { getSession } from "@/supabase/auth";
 
 export default function Protected() {
   const navigate = useNavigate();
   const [loader, setLoader] = useState(true);
-  const { user, authenticated } = useUserStore();
+  const { user, login } = useUserStore();
   useEffect(() => {
-    // console.log("user", user, authenticated);
-    if (!user && !authenticated) {
-      navigate("/");
-    }
+    getSession().then((session) => {
+      if (!session) {
+        navigate("/", { replace: true });
+      }
+      if (!user) {
+        login(session?.user?.user_metadata);
+      }
+    });
     setLoader(false);
-  }, [user, authenticated]);
+  }, []);
   return loader ? <Loading /> : <Outlet />;
 }

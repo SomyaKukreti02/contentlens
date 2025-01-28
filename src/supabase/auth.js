@@ -4,7 +4,7 @@ const getSession = async () => {
   try {
     const { data, error } = await supabase.auth.getSession();
     if (error) throw error;
-    return data;
+    return data?.session;
   } catch (error) {
     console.error("Error getting session:", error.message);
   }
@@ -31,4 +31,4 @@ const signOut = async () => {
   }
 };
 
-export { signInWithOAuth, signOut, getSession};
+export { signInWithOAuth, signOut, getSession };

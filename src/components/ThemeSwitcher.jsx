@@ -1,14 +1,17 @@
-import React from "react";
-
+import useThemeStore from "@/store/themeStore";
 const ThemeSwitcher = () => {
+  const { theme, toggleTheme } = useThemeStore();
+  console.log(theme);
   return (
     <label className="swap swap-rotate">
       {/* this hidden checkbox controls the state */}
-      <input type="checkbox" />
+      <input type="checkbox" onChange={toggleTheme} />
 
       {/* sun icon */}
       <svg
-        className="swap-on h-6 w-6 fill-current"
+        className={`${
+          theme === "dark" ? "swap-on" : "swap-off"
+        } h-6 w-6 fill-current`}
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 24 24"
       >
@@ -17,7 +20,9 @@ const ThemeSwitcher = () => {
 
       {/* moon icon */}
       <svg
-        className="swap-off h-6 w-6 fill-current"
+        className={`${
+          theme === "light" ? "swap-on" : "swap-off"
+        } h-6 w-6 fill-current`}
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 24 24"
       >
