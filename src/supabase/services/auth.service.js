@@ -1,5 +1,5 @@
+import conf from "@/config/supabase.config";
 import supabase from "@/supabase/client";
-
 const getSession = async () => {
   try {
     const { data, error } = await supabase.auth.getSession();
@@ -14,6 +14,9 @@ const signInWithOAuth = async (provider) => {
   try {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: provider,
+      options: {
+        redirectTo: conf.HOST_URL,
+      },
     });
     if (error) throw error;
     return data;
