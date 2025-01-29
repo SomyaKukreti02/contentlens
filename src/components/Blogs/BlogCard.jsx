@@ -1,4 +1,6 @@
 import no_image from "@/assets/no_image.svg";
+import PropTypes from "prop-types";
+
 const BlogCard = ({
   title = "",
   description = "",
@@ -55,6 +57,17 @@ const BlogCard = ({
       </div>
     </div>
   );
+};
+
+BlogCard.propTypes = {
+  title: PropTypes.string,
+  description: PropTypes.string,
+  slug: PropTypes.string,
+  banner_url: PropTypes.string,
+  author: PropTypes.string,
+  author_avatar_url: PropTypes.string,
+  updated_at: PropTypes.string,
+  tags: PropTypes.array,
 };
 
 export default BlogCard;

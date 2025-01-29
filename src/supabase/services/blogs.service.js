@@ -111,15 +111,33 @@ const getActiveBlogs = async () => {
 // Read User's blogs
 const getAuthorBlogs = async (email) => {
   try {
-    const { data, error } = await supabase
+    const { data: active } = await supabase
       .from("blogs")
       .select()
       .eq("author_email", email)
+      .eq("status", "active")
       .order("updated_at", { ascending: false });
-    if (error) {
-      throw new Error(error.message);
-    }
-    return data;
+
+    const { data: inactive } = await supabase
+      .from("blogs")
+      .select()
+      .eq("author_email", email)
+      .eq("status", "inactive")
+      .order("updated_at", { ascending: false });
+
+    const { data: draft } = await supabase
+      .from("blogs")
+      .select()
+      .eq("author_email", email)
+      .eq("status", "draft")
+      .order("updated_at", { ascending: false });
+
+    const blogs = {
+      active,
+      inactive,
+      draft,
+    };
+    return blogs;
   } catch (error) {
     console.error("Error getting user blogs:", error.message);
   }

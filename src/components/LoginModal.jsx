@@ -14,7 +14,10 @@ const LoginModal = () => {
         </div>
         <div className="modal-action">
           <form method="dialog">
-            <button className="btn">Go Back</button>
+            <button className="btn">
+              <kbd className="kbd">esc</kbd>
+              Go Back
+            </button>
           </form>
         </div>
       </div>

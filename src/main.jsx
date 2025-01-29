@@ -1,4 +1,5 @@
 import "@/index.css";
+import "boxicons/css/boxicons.min.css";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Route, Routes } from "react-router";
