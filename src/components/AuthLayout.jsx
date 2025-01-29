@@ -1,20 +1,29 @@
 import { useEffect, useState } from "react";
-import { useNavigate, Outlet } from "react-router";
-import Loading from "@/pages/Loading";
+import { useNavigate, Outlet, useLocation } from "react-router";
 import { getSession } from "@/supabase/services/auth.service";
+import LoginModal from "./LoginModal";
 
 const Protected = () => {
   const navigate = useNavigate();
-  const [loader, setLoader] = useState(true);
+  const location = useLocation();
+  const [authenticated, setAuthenticated] = useState(false);
+
+  const checkAuth = async () => {
+    const session = await getSession();
+    if (!session) {
+      const loginModal = document.getElementById("login_modal");
+      loginModal.showModal();
+      loginModal.addEventListener("close", () => {
+        navigate(location.state?.from || "/");
+      });
+    }
+  };
+
   useEffect(() => {
-    getSession().then((session) => {
-      if (!session) {
-        navigate("/", { replace: true });
-      }
-    });
-    setLoader(false);
-  }, []);
-  return loader ? <Loading /> : <Outlet />;
+    checkAuth();
+  }, [authenticated]);
+
+  return !authenticated ? <LoginModal /> : <Outlet />;
 };
 
 export default Protected;

@@ -1,6 +1,10 @@
 import { useState } from "react";
 import { signInWithOAuth } from "@/supabase/services/auth.service";
-const GoogleLoginButton = () => {
+const GoogleLoginButton = ({
+  variant = "tiny",
+  color = "",
+  tooltip = "left",
+}) => {
   const [loading, setLoading] = useState(false);
 
   const handleLogin = async () => {
@@ -14,9 +18,12 @@ const GoogleLoginButton = () => {
     }
   };
   return (
-    <div className="tooltip tooltip-left" data-tip="Login with Google">
+    <div
+      className={variant === "tiny" ? `tooltip tooltip-${tooltip}` : ""}
+      data-tip={variant === "tiny" ? "Login with Google" : ""}
+    >
       <button
-        className="btn btn-circle"
+        className={`btn ${variant === "tiny" ? " btn-circle " : " "} `}
         disabled={loading}
         onClick={() => handleLogin()}
       >
@@ -57,6 +64,7 @@ const GoogleLoginButton = () => {
                 </g>
               </svg>
             </span>
+            {variant === "full" ? "Login with Google" : ""}
           </>
         )}
       </button>
