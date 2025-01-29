@@ -26,14 +26,17 @@ const BlogForm = ({ initialData }) => {
     setSubmitting(true);
     console.log(data);
     const { title, slug, banner, content: description, status } = data;
-    const file = banner[0];
-    const folderName = "banners";
-    const fileName = uuid();
-    const { path: banner_url } = await uploadFile(file, {
-      folderName,
-      fileName,
-    });
-
+    let banner_url = null;
+    if (banner.length > 0) {
+      const file = banner[0];
+      const folderName = "banners";
+      const fileName = uuid();
+      const { path } = await uploadFile(file, {
+        folderName,
+        fileName,
+      });
+      banner_url = path;
+    }
     // Save the blog post to the database
     await createBlog({
       title,
