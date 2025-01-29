@@ -48,11 +48,18 @@ const Header = () => {
         </div>
       </div>
       <div className="navbar-center">
-        <Link to="/" className="btn btn-ghost text-xl">
-          ContentLens
+        <Link to="/" className="btn btn-ghost text-2xl">
+          Content Lens
         </Link>
       </div>
-      <div className="navbar-end">
+      <div className="navbar-end gap-2">
+        <div className="tooltip tooltip-bottom" data-tip="Create new content">
+          <Link to={"/blog/create"}>
+            <button className="btn btn-ghost btn-active btn-circle">
+              <i className="bx bx-message-rounded-add  text-3xl" />
+            </button>
+          </Link>
+        </div>
         {!user && <GoogleLoginButton />}
         {user && (
           <div className="dropdown dropdown-end">

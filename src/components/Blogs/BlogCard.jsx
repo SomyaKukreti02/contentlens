@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
-
+import { useEffect, useState } from "react";
+import { getPublicUrl } from "@/supabase/services/upload.service";
 const BlogCard = ({
   title = "",
   description = "",
@@ -10,18 +11,30 @@ const BlogCard = ({
   updated_at = "",
   tags = [],
 }) => {
+  const [bannerUrl, setBannerUrl] = useState("");
   const publishedAt = new Date(updated_at).toDateString();
   const initials = author
     .split(" ")
     .map((n) => n[0])
     .join("");
-  console.log(title, banner_url);
+  const getBannerUrl = async () => {
+    try {
+      if (!banner_url) return;
+      const { publicUrl } = await getPublicUrl(banner_url);
+      setBannerUrl(publicUrl);
+    } catch (error) {
+      console.log("Error getting banner url: ", error.message);
+    }
+  };
+  useEffect(() => {
+    getBannerUrl();
+  }, [banner_url]);
   return (
     <div className="card bg-base-100 shadow-xl">
       <figure className="h-32 flex items-center justify-center">
-        {banner_url?.trim() ? (
+        {bannerUrl?.trim() ? (
           <img
-            src={banner_url}
+            src={bannerUrl}
             alt="banner"
             className="object-cover h-full w-full"
           />

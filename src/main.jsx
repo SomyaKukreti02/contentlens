@@ -4,10 +4,11 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Route, Routes } from "react-router";
 import App from "@/App.jsx";
+import AuthLayout from "@/components/AuthLayout.jsx";
 import Home from "@/pages/Home.jsx";
 import Profile from "@/pages/Profile.jsx";
 import NotFound from "@/pages/NotFound.jsx";
-import AuthLayout from "@/components/AuthLayout.jsx";
+import CreateBlog from "@/pages/CreateBlog";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -20,6 +21,7 @@ createRoot(document.getElementById("root")).render(
           <Route element={<AuthLayout />}>
             {/* private pages */}
             <Route path="/profile" element={<Profile />} />
+            <Route path="/blog/create" element={<CreateBlog />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Route>

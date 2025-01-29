@@ -13,7 +13,7 @@ const Profile = () => {
     const user = await getUser();
     setLoading(true);
     const data = await getAuthorBlogs(user?.email);
-    console.log(data);
+    // console.log(data);
     setPublishedBlogs(data.published);
     setArchivedBlogs(data.archived);
     setDraftBlogs(data.draft);
@@ -30,7 +30,7 @@ const Profile = () => {
       {/* Accordian */}
       <div className="join join-vertical w-full bg-base-200">
         <div className="collapse collapse-arrow join-item border-base-300 border">
-          <input type="radio" name="my-accordion-4" defaultChecked />
+          <input type="radio" name="blog_accordian" defaultChecked />
           <div className="collapse-title text-xl font-medium">
             Saved as draft :
           </div>
@@ -39,7 +39,7 @@ const Profile = () => {
           </div>
         </div>
         <div className="collapse collapse-arrow join-item border-base-300 border">
-          <input type="radio" name="my-accordion-4" />
+          <input type="radio" name="blog_accordian" />
           <div className="collapse-title text-xl font-medium">Archives</div>
           <div className="collapse-content">
             <BlogsWrapper
