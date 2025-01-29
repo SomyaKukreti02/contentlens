@@ -1,3 +1,4 @@
+import no_image from "@/assets/no_image.svg";
 const BlogCard = ({
   title = "",
   description = "",
@@ -18,7 +19,7 @@ const BlogCard = ({
       {banner_url && (
         <figure className="h-32 overflow-hidden">
           <img
-            src={banner_url}
+            src={banner_url || no_image}
             alt="Shoes"
             className="object-cover h-full w-full"
           />

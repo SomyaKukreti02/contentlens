@@ -4,21 +4,10 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Loading from "@/pages/Loading";
 import { Outlet } from "react-router";
-import useUserStore from "@/store/userStore";
-import { getSession } from "@/supabase/services/auth.service";
 
 const App = () => {
-  const { login } = useUserStore();
   const [loading, setLoading] = useState(false);
-  useEffect(() => {
-    setLoading(true);
-    getSession().then((session) => {
-      if (session) {
-        login(session?.user?.user_metadata);
-      }
-    });
-    setLoading(false);
-  }, []);
+  useEffect(() => {}, []);
   return (
     <div className="container mx-auto px-2 relative">
       <Header />

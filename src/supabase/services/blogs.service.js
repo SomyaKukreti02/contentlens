@@ -109,12 +109,12 @@ const getActiveBlogs = async () => {
 };
 
 // Read User's blogs
-const getAuthorBlogs = async (id) => {
+const getAuthorBlogs = async (email) => {
   try {
     const { data, error } = await supabase
       .from("blogs")
       .select()
-      .eq("author_id", id)
+      .eq("author_email", email)
       .order("updated_at", { ascending: false });
     if (error) {
       throw new Error(error.message);
