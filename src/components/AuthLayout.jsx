@@ -16,6 +16,8 @@ const Protected = () => {
       loginModal.addEventListener("close", () => {
         navigate(location.state?.from || "/");
       });
+    } else {
+      setAuthenticated(true);
     }
   };
 

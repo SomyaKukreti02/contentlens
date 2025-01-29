@@ -20,12 +20,12 @@ const getUser = async () => {
     console.error("Error getting user:", error.message);
   }
 };
-const signInWithOAuth = async (provider) => {
+const signInWithOAuth = async (provider, redirectTo = conf.HOST_URL) => {
   try {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: provider,
       options: {
-        redirectTo: conf.HOST_URL,
+        redirectTo,
       },
     });
     if (error) throw error;

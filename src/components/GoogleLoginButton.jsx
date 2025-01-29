@@ -10,7 +10,7 @@ const GoogleLoginButton = ({
   const handleLogin = async () => {
     setLoading(true);
     try {
-      await signInWithOAuth("google");
+      await signInWithOAuth("google", window.location.href);
     } catch (error) {
       console.error("Error during google login:", error);
     } finally {
