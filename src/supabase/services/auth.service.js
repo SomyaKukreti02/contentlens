@@ -15,7 +15,7 @@ const getUser = async () => {
     const {
       data: { user },
     } = await supabase.auth.getUser();
-    return user;
+    return user?.user_metadata;
   } catch (error) {
     console.error("Error getting user:", error.message);
   }

@@ -14,6 +14,7 @@ const Header = () => {
   useEffect(() => {
     getUser().then((data) => {
       setUser(data);
+      // "Somya Kukreti" -> ["Somya", "Kukreti"] -> ["S", "K"] -> "SK"
       setInitials(
         user?.full_name
           .split(" ")
@@ -77,7 +78,7 @@ const Header = () => {
                 <img
                   alt={initials}
                   src={
-                    user.avatar_url ||
+                    user?.avatar_url ||
                     "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
                   }
                 />
