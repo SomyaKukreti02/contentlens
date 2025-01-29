@@ -5,8 +5,8 @@ import BlogsWrapper from "@/components/Blogs/BlogsWrapper";
 
 const Profile = () => {
   const [loading, setLoading] = useState(false);
-  const [activeBlogs, setActiveBlogs] = useState([]);
-  const [inactiveBlogs, setInactiveBlogs] = useState([]);
+  const [publishedBlogs, setPublishedBlogs] = useState([]);
+  const [archivedBlogs, setArchivedBlogs] = useState([]);
   const [draftBlogs, setDraftBlogs] = useState([]);
 
   const fetchBlogs = async () => {
@@ -14,9 +14,9 @@ const Profile = () => {
     setLoading(true);
     const data = await getAuthorBlogs(user?.email);
     console.log(data);
-    setActiveBlogs(data.active);
-    setInactiveBlogs(data?.inactive);
-    setDraftBlogs(data?.draft);
+    setPublishedBlogs(data.published);
+    setArchivedBlogs(data.archived);
+    setDraftBlogs(data.draft);
     setLoading(false);
   };
   useEffect(() => {
@@ -25,7 +25,7 @@ const Profile = () => {
   return (
     <div>
       <div className="">
-        <BlogsWrapper loading={loading} blogs={activeBlogs} skeletons={8} />
+        <BlogsWrapper loading={loading} blogs={publishedBlogs} skeletons={8} />
       </div>
       {/* Accordian */}
       <div className="join join-vertical w-full bg-base-200">
@@ -40,11 +40,11 @@ const Profile = () => {
         </div>
         <div className="collapse collapse-arrow join-item border-base-300 border">
           <input type="radio" name="my-accordion-4" />
-          <div className="collapse-title text-xl font-medium">Inactive</div>
+          <div className="collapse-title text-xl font-medium">Archives</div>
           <div className="collapse-content">
             <BlogsWrapper
               loading={loading}
-              blogs={inactiveBlogs}
+              blogs={archivedBlogs}
               skeletons={4}
             />
           </div>

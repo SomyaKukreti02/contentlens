@@ -29,20 +29,7 @@ const Header = () => {
       <div className="navbar-start">
         <div className="dropdown">
           <div tabIndex={0} role="button" className="btn btn-ghost btn-circle">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M4 6h16M4 12h16M4 18h7"
-              />
-            </svg>
+            <i className="bx bx-menu text-3xl" />
           </div>
           <ul
             tabIndex={0}
@@ -75,13 +62,8 @@ const Header = () => {
               className="btn btn-ghost btn-circle avatar"
             >
               <div className="rounded-full">
-                <img
-                  alt={initials}
-                  src={
-                    user?.avatar_url ||
-                    "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
-                  }
-                />
+                {user && <img alt={initials} src={user.avatar_url} />}
+                {!user && <i className="bx bx-user text-3xl" />}
               </div>
             </div>
             <ul

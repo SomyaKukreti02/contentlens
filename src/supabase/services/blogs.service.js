@@ -92,37 +92,37 @@ const deleteBlog = async (id) => {
 };
 
 // Read  blogs
-const getActiveBlogs = async () => {
+const getPublishedBlogs = async () => {
   try {
     const { data, error } = await supabase
       .from("blogs")
       .select()
-      .eq("status", "active")
+      .eq("status", "published")
       .order("updated_at", { ascending: false });
     if (error) {
       throw new Error(error.message);
     }
     return data;
   } catch (error) {
-    console.error("Error getting active blogs:", error.message);
+    console.error("Error getting published blogs:", error.message);
   }
 };
 
 // Read User's blogs
 const getAuthorBlogs = async (email) => {
   try {
-    const { data: active } = await supabase
+    const { data: published } = await supabase
       .from("blogs")
       .select()
       .eq("author_email", email)
-      .eq("status", "active")
+      .eq("status", "published")
       .order("updated_at", { ascending: false });
 
-    const { data: inactive } = await supabase
+    const { data: archived } = await supabase
       .from("blogs")
       .select()
       .eq("author_email", email)
-      .eq("status", "inactive")
+      .eq("status", "archived")
       .order("updated_at", { ascending: false });
 
     const { data: draft } = await supabase
@@ -133,8 +133,8 @@ const getAuthorBlogs = async (email) => {
       .order("updated_at", { ascending: false });
 
     const blogs = {
-      active,
-      inactive,
+      published,
+      archived,
       draft,
     };
     return blogs;
@@ -176,7 +176,7 @@ export {
   createBlog,
   updateBlog,
   deleteBlog,
-  getActiveBlogs,
+  getPublishedBlogs,
   getAuthorBlogs,
   getBlog,
   isSlugUnique,
