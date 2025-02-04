@@ -4,6 +4,9 @@ import PropTypes from "prop-types";
 import { uploadFile } from "@/supabase/services/upload.service";
 import { createBlog } from "@/supabase/services/blogs.service";
 import { v4 as uuid } from "uuid";
+import { EditorContent, useEditor } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
+import Toolbar from "./Toolbar";
 
 const BlogForm = ({ initialData }) => {
   const [submitting, setSubmitting] = useState(false);
@@ -14,6 +17,16 @@ const BlogForm = ({ initialData }) => {
     setValue,
   } = useForm({ defaultValues: initialData });
 
+  // Initialize the editor
+  const editor = useEditor({
+    extensions: [StarterKit],
+    content: initialData?.content || "<p>Start typing here...</p>",
+    onUpdate: ({ editor }) => {
+      setValue("content", editor.getHTML()); // Update form value with editor content
+    },
+  });
+
+  // Set initial form values if `initialData` is provided
   useEffect(() => {
     if (initialData) {
       Object.keys(initialData).forEach((key) => {
@@ -22,11 +35,13 @@ const BlogForm = ({ initialData }) => {
     }
   }, [initialData, setValue]);
 
+  // Handle form submission
   const onSubmit = async (data) => {
     setSubmitting(true);
-    console.log(data);
-    const { title, slug, banner, content: description, status } = data;
+    const { title, slug, banner, content, status } = data;
     let banner_url = null;
+
+    // Upload banner image if provided
     if (banner.length > 0) {
       const file = banner[0];
       const folderName = "banners";
@@ -37,12 +52,13 @@ const BlogForm = ({ initialData }) => {
       });
       banner_url = path;
     }
-    // Save the blog post to the database
+
+    // Create the blog post
     await createBlog({
       title,
       slug: makeUrlFriendly(slug),
       banner_url,
-      description,
+      description: content,
       status,
     });
     setSubmitting(false);
@@ -96,17 +112,17 @@ const BlogForm = ({ initialData }) => {
       <label className="label">
         <span className="label-text">Content</span>
       </label>
-      <textarea
-        placeholder="Your content goes here..."
-        className="input input-bordered max-w-5xl min-h-64 lg:min-h-96"
-        {...register("content", { required: "Content is required" })}
-      />
+      <div className="border rounded-md p-2 max-w-5xl min-h-64 bg-base-100 flex flex-col gap-4">
+        <Toolbar editor={editor} />
+        <EditorContent editor={editor} />
+      </div>
       {errors.content && (
         <span className="text-error">{errors.content.message}</span>
       )}
 
       <div className="flex justify-end mt-4 max-w-5xl gap-4">
         <button
+          type="button"
           className="btn btn-circle btn-outline btn-secondary"
           disabled={submitting}
         >
@@ -138,13 +154,12 @@ BlogForm.propTypes = {
 };
 
 const makeUrlFriendly = (input) => {
-  // Replace spaces with dashes, ensure only single dash between words, and make the slug lowercase
   return input
-    .trim() // Removes leading/trailing whitespace
-    .toLowerCase() // Optional: Converts slug to lowercase
-    .replace(/\s+/g, "-") // Replace all spaces with dashes
-    .replace(/[^a-z0-9-_~.%]/g, "") // Keep alphanumeric, dash, underscore, tilde, period, and percent
-    .replace(/--+/g, "-"); // Replace consecutive dashes with a single dash
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, "-")
+    .replace(/[^a-z0-9-_~.%]/g, "")
+    .replace(/--+/g, "-");
 };
 
 export default BlogForm;

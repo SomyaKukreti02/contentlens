@@ -9,6 +9,7 @@ import Home from "@/pages/Home.jsx";
 import Profile from "@/pages/Profile.jsx";
 import NotFound from "@/pages/NotFound.jsx";
 import CreateBlog from "@/pages/CreateBlog";
+import BlogDetails from "@/pages/BlogDetails";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -22,6 +23,7 @@ createRoot(document.getElementById("root")).render(
             {/* private pages */}
             <Route path="/profile" element={<Profile />} />
             <Route path="/blog/create" element={<CreateBlog />} />
+            <Route path="/blog/:slug" element={<BlogDetails />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Route>

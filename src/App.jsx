@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Loading from "@/pages/Loading";
+
 import { Outlet } from "react-router";
 
 const App = () => {

@@ -144,9 +144,12 @@ const getAuthorBlogs = async (email) => {
 };
 
 // Read a single blog
-const getBlog = async (id) => {
+const getBlogBySlug = async (slug) => {
   try {
-    const { data, error } = await supabase.from("blogs").select().eq("id", id);
+    const { data, error } = await supabase
+      .from("blogs")
+      .select()
+      .eq("slug", slug);
     if (error) {
       throw new Error(error.message);
     }
@@ -178,7 +181,7 @@ export {
   deleteBlog,
   getPublishedBlogs,
   getAuthorBlogs,
-  getBlog,
+  getBlogBySlug,
   isSlugUnique,
   getAuthor,
 };
