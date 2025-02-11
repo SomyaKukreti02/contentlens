@@ -1,15 +1,16 @@
+import PropTypes from "prop-types";
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
-import PropTypes from "prop-types";
-import { uploadFile } from "@/supabase/services/upload.service";
-import { createBlog } from "@/supabase/services/blogs.service";
+import { uploadFile } from "@/supabase/services/storage.service";
+import { updateBlog } from "@/supabase/services/blogs.service";
 import { v4 as uuid } from "uuid";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Toolbar from "./Toolbar";
 
-const BlogForm = ({ initialData }) => {
+const EditBlogForm = ({ initialData }) => {
   const [submitting, setSubmitting] = useState(false);
+  const [deletePreviousBanner, setDeletePreviousBanner] = useState(false);
   const {
     register,
     handleSubmit,
@@ -20,9 +21,9 @@ const BlogForm = ({ initialData }) => {
   // Initialize the editor
   const editor = useEditor({
     extensions: [StarterKit],
-    content: initialData?.content || "<p>Start typing here...</p>",
+    content: initialData.description || "<p>Start typing here...</p>",
     onUpdate: ({ editor }) => {
-      setValue("content", editor.getHTML()); // Update form value with editor content
+      setValue("description", editor.getHTML()); // Update form value with editor content
     },
   });
 
@@ -33,12 +34,12 @@ const BlogForm = ({ initialData }) => {
         setValue(key, initialData[key]);
       });
     }
-  }, [initialData, setValue]);
+  }, [initialData]);
 
   // Handle form submission
   const onSubmit = async (data) => {
     setSubmitting(true);
-    const { title, slug, banner, content, status } = data;
+    const { title, slug, banner, description, status } = data;
     let banner_url = null;
 
     // Upload banner image if provided
@@ -54,13 +55,14 @@ const BlogForm = ({ initialData }) => {
     }
 
     // Create the blog post
-    await createBlog({
+    await updateBlog(initialData.id, {
       title,
       slug: makeUrlFriendly(slug),
       banner_url,
-      description: content,
+      description,
       status,
     });
+
     setSubmitting(false);
   };
 
@@ -91,22 +93,24 @@ const BlogForm = ({ initialData }) => {
         {...register("slug", { required: "Slug is required" })}
       />
       {errors.slug && <span className="text-error">{errors.slug.message}</span>}
-
       {/* BANNER INPUT */}
       <label className="label">
         <span className="label-text">Pick a banner image</span>
       </label>
-      <input
-        type="file"
-        accept="image/*"
-        className="file-input file-input-bordered file-input-sm w-full max-w-xs"
-        {...register("banner", {
-          validate: (value) =>
-            value.length === 0 ||
-            value[0].type.startsWith("image/") ||
-            "Only image files are allowed",
-        })}
-      />
+      <div>
+        <input
+          type="file"
+          accept="image/*"
+          className="file-input file-input-bordered file-input-sm w-full max-w-xs"
+          {...register("banner", {
+            validate: (value) =>
+              value.length === 0 ||
+              value[0].type.startsWith("image/") ||
+              "Only image files are allowed",
+          })}
+        />
+        <button className="btn btn-sm">Unset</button>
+      </div>
 
       {/* CONTENT */}
       <label className="label">
@@ -116,8 +120,8 @@ const BlogForm = ({ initialData }) => {
         <Toolbar editor={editor} />
         <EditorContent editor={editor} />
       </div>
-      {errors.content && (
-        <span className="text-error">{errors.content.message}</span>
+      {errors.description && (
+        <span className="text-error">{errors.description.message}</span>
       )}
 
       <div className="flex justify-end mt-4 max-w-5xl gap-4">
@@ -149,7 +153,7 @@ const BlogForm = ({ initialData }) => {
   );
 };
 
-BlogForm.propTypes = {
+EditBlogForm.propTypes = {
   initialData: PropTypes.object,
 };
 
@@ -162,4 +166,4 @@ const makeUrlFriendly = (input) => {
     .replace(/--+/g, "-");
 };
 
-export default BlogForm;
+export default EditBlogForm;

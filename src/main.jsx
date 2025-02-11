@@ -19,12 +19,12 @@ createRoot(document.getElementById("root")).render(
         <Route path="/" element={<App />}>
           {/* public pages */}
           <Route index path="/" element={<Home />} />
+          <Route path="/blog/:slug" element={<Blog />} />
 
           <Route element={<AuthLayout />}>
             {/* private pages */}
             <Route path="/profile" element={<Profile />} />
             <Route path="/blog/create" element={<CreateBlog />} />
-            <Route path="/blog/:slug" element={<Blog />} />
             <Route path="/blog/:slug/edit" element={<EditBlog />} />
           </Route>
           <Route path="*" element={<NotFound />} />

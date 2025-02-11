@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
-import { getPublicUrl } from "@/supabase/services/upload.service";
+import { getPublicUrl } from "@/supabase/services/storage.service";
 import { Link } from "react-router";
 const BlogCard = ({
   title = "",

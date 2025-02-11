@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { getBlogBySlug } from "@/supabase/services/blogs.service";
-import { getPublicUrl } from "@/supabase/services/upload.service";
+import { getPublicUrl } from "@/supabase/services/storage.service";
 import Loading from "./Loading";
 
 const BlogDetails = () => {
