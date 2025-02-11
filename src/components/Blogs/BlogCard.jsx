@@ -39,6 +39,7 @@ const BlogCard = ({
               src={bannerUrl}
               alt="banner"
               className="object-cover h-full w-full"
+              loading="lazy"
             />
           ) : (
             <svg
