@@ -18,6 +18,7 @@ const Home = () => {
   return (
     <div>
       <SearchBox />
+      <h1 className="my-6">Featured</h1>
       <BlogsWrapper loading={loading} blogs={blogs} skeletons={16} />
     </div>
   );

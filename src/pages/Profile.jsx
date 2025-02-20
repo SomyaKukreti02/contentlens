@@ -25,8 +25,10 @@ const Profile = () => {
   return (
     <div>
       <div className="">
+        <h1 className="my-6">Featured</h1>
         <BlogsWrapper loading={loading} blogs={publishedBlogs} skeletons={8} />
       </div>
+      <span className="divider my-16"></span>
       {/* Accordian */}
       <div className="join join-vertical w-full bg-base-200">
         <div className="collapse collapse-arrow join-item border-base-300 border">
