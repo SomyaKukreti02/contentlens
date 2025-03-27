@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { getPublishedBlogs } from "@/supabase/services/blogs.service";
 import SearchBox from "@/components/Home/SearchBox";
 import BlogsWrapper from "@/components/Blogs/BlogsWrapper";
-import CategoryList from "@/components/CategoryList";
+import CategoryList from "@/components/Home/CategoryList";
 
 const Home = () => {
   const [loading, setLoading] = useState(false);

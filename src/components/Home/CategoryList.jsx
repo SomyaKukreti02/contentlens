@@ -10,7 +10,7 @@ const CategoryList = ({ onSelectCategory }) => {
   };
 
   return (
-    <div className="dropdown dropdown-start relative">
+    <div className="dropdown dropdown-end relative">
       <div tabIndex={0} role="button" className="btn m-1">
         {selectedCategory}
       </div>
@@ -20,7 +20,9 @@ const CategoryList = ({ onSelectCategory }) => {
       >
         {CATEGORIES.map((category) => (
           <li key={category}>
-            <a onClick={() => handleCategoryChange(category)}>{category}</a>
+            <button onClick={() => handleCategoryChange(category)}>
+              {category}
+            </button>
           </li>
         ))}
       </ul>
