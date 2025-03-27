@@ -7,8 +7,9 @@ import { v4 as uuid } from "uuid";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Toolbar from "./Toolbar";
+import { CATEGORIES } from "@/constants";
 
-const BlogForm = ({ initialData }) => {
+const BlogForm = ({ initialData = {} }) => {
   const [submitting, setSubmitting] = useState(false);
   const {
     register,
@@ -38,7 +39,7 @@ const BlogForm = ({ initialData }) => {
   // Handle form submission
   const onSubmit = async (data) => {
     setSubmitting(true);
-    const { title, slug, banner, description, status } = data;
+    const { title, slug, banner, description, status, category } = data;
     let banner_url = null;
 
     // Upload banner image if provided
@@ -60,6 +61,7 @@ const BlogForm = ({ initialData }) => {
       banner_url,
       description,
       status,
+      category,
     });
     setSubmitting(false);
   };
@@ -91,6 +93,25 @@ const BlogForm = ({ initialData }) => {
         {...register("slug", { required: "Slug is required" })}
       />
       {errors.slug && <span className="text-error">{errors.slug.message}</span>}
+
+      {/* CATEGORY */}
+      <label className="label">
+        <span className="label-text">Category</span>
+      </label>
+      <select
+        className="select select-bordered max-w-lg"
+        {...register("category", { required: "Category is required" })}
+      >
+        <option value="">Select a category</option>
+        {CATEGORIES.map((category) => (
+          <option key={category} value={category.toLowerCase()}>
+            {category}
+          </option>
+        ))}
+      </select>
+      {errors.category && (
+        <span className="text-error">{errors.category.message}</span>
+      )}
 
       {/* BANNER INPUT */}
       <label className="label">

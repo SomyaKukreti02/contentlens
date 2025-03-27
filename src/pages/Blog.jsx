@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { Link, useParams } from "react-router";
+import { getUser } from "@/supabase/services/auth.service";
 import { getBlogBySlug } from "@/supabase/services/blogs.service";
 import { getPublicUrl } from "@/supabase/services/storage.service";
 import Loading from "./Loading";
@@ -9,9 +10,18 @@ const BlogDetails = () => {
   const [bannerUrl, setBannerUrl] = useState("");
   const [loading, setLoading] = useState(false);
   const [blog, setBlog] = useState(null);
+  const [isAuthorOfThisBlog, setIsAuthorOfThisBlog] = useState(false);
   const [publishedAt, setPublishedAt] = useState("");
   const [initials, setInitials] = useState("");
-
+  const checkAuthorIsUser = async () => {
+    try {
+      const user = await getUser();
+      console.log("checkAuthIsUser: ", user);
+      setIsAuthorOfThisBlog(user.email === blog.author_email);
+    } catch (error) {
+      console.error("Error checking author: ", error.message);
+    }
+  };
   const fetchBlog = async (slug) => {
     try {
       const data = await getBlogBySlug(slug);
@@ -27,6 +37,7 @@ const BlogDetails = () => {
       console.log("Error fetching blog: ", error.message);
     }
   };
+
   const getBannerUrl = async () => {
     try {
       if (!blog.banner_url) return;
@@ -44,14 +55,17 @@ const BlogDetails = () => {
   }, [slug]);
 
   useEffect(() => {
-    getBannerUrl();
+    if (blog) {
+      getBannerUrl();
+      checkAuthorIsUser();
+    }
   }, [blog]);
 
   return (
     <>
       {loading && <Loading />}
       {!loading && blog && (
-        <div className="my-4">
+        <div className="my-4 relative">
           {bannerUrl?.trim() && (
             <figure className="flex items-center justify-center h-64">
               <img
@@ -88,6 +102,13 @@ const BlogDetails = () => {
             ></article>
           </div>
           {/* <span className="divider"></span> */}
+          {isAuthorOfThisBlog && (
+            <Link to={`/blog/${blog.slug}/edit`}>
+              <button className="btn btn-secondary rounded-full absolute right-4 top-4 z-10 ">
+                Edit
+              </button>
+            </Link>
+          )}
         </div>
       )}
     </>

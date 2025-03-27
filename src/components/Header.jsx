@@ -38,9 +38,7 @@ const Header = () => {
             <li>
               <Link>Welcome</Link>
             </li>
-            <li>
-              <Link>Categories</Link>
-            </li>
+
             <li>
               <Link>Post</Link>
             </li>

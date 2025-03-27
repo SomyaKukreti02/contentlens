@@ -7,10 +7,10 @@ import { v4 as uuid } from "uuid";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Toolbar from "./Toolbar";
+import { CATEGORIES } from "@/constants";
 
 const EditBlogForm = ({ initialData }) => {
   const [submitting, setSubmitting] = useState(false);
-  const [deletePreviousBanner, setDeletePreviousBanner] = useState(false);
   const {
     register,
     handleSubmit,
@@ -23,7 +23,7 @@ const EditBlogForm = ({ initialData }) => {
     extensions: [StarterKit],
     content: initialData.description || "<p>Start typing here...</p>",
     onUpdate: ({ editor }) => {
-      setValue("description", editor.getHTML()); // Update form value with editor content
+      setValue("description", editor.getHTML());
     },
   });
 
@@ -39,28 +39,26 @@ const EditBlogForm = ({ initialData }) => {
   // Handle form submission
   const onSubmit = async (data) => {
     setSubmitting(true);
-    const { title, slug, banner, description, status } = data;
-    let banner_url = null;
+    const { title, slug, banner, description, status, category } = data;
+    let banner_url = initialData.banner_url || null;
 
-    // Upload banner image if provided
+    // Upload new banner image if provided
     if (banner.length > 0) {
       const file = banner[0];
       const folderName = "banners";
       const fileName = uuid();
-      const { path } = await uploadFile(file, {
-        folderName,
-        fileName,
-      });
+      const { path } = await uploadFile(file, { folderName, fileName });
       banner_url = path;
     }
 
-    // Create the blog post
+    // Update the blog post
     await updateBlog(initialData.id, {
       title,
       slug: makeUrlFriendly(slug),
       banner_url,
       description,
       status,
+      category, // Include category when updating
     });
 
     setSubmitting(false);
@@ -93,6 +91,26 @@ const EditBlogForm = ({ initialData }) => {
         {...register("slug", { required: "Slug is required" })}
       />
       {errors.slug && <span className="text-error">{errors.slug.message}</span>}
+
+      {/* CATEGORY INPUT */}
+      <label className="label">
+        <span className="label-text">Category</span>
+      </label>
+      <select
+        className="select select-bordered max-w-lg"
+        {...register("category", { required: "Category is required" })}
+        defaultValue={initialData.category || ""}
+      >
+        {CATEGORIES.map((category) => (
+          <option key={category} value={category.toLowerCase()}>
+            {category}
+          </option>
+        ))}
+      </select>
+      {errors.category && (
+        <span className="text-error">{errors.category.message}</span>
+      )}
+
       {/* BANNER INPUT */}
       <label className="label">
         <span className="label-text">Pick a banner image</span>
@@ -109,7 +127,6 @@ const EditBlogForm = ({ initialData }) => {
               "Only image files are allowed",
           })}
         />
-        <button className="btn btn-sm">Unset</button>
       </div>
 
       {/* CONTENT */}
@@ -126,27 +143,11 @@ const EditBlogForm = ({ initialData }) => {
 
       <div className="flex justify-end mt-4 max-w-5xl gap-4">
         <button
-          type="button"
-          className="btn btn-circle btn-outline btn-secondary"
-          disabled={submitting}
-        >
-          <i className="bx bx-show text-2xl"></i>
-        </button>
-        <button
-          type="submit"
-          className="btn btn-outline btn-secondary"
-          onClick={() => setValue("status", "draft")}
-          disabled={submitting}
-        >
-          Save as draft
-        </button>
-        <button
           type="submit"
           className="btn btn-secondary"
-          onClick={() => setValue("status", "published")}
           disabled={submitting}
         >
-          Publish
+          Update
         </button>
       </div>
     </form>
