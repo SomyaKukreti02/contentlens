@@ -52,7 +52,7 @@ const Header = () => {
       </div>
       <div className="navbar-end gap-2">
         <div className="tooltip tooltip-bottom" data-tip="Create new content">
-          <Link to={"/blog/create"}>
+          <Link to={"/blogs/create"}>
             <button className="btn btn-ghost btn-active btn-circle">
               <i className="bx bx-message-rounded-add  text-3xl" />
             </button>

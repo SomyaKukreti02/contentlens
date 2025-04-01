@@ -31,7 +31,7 @@ const BlogCard = ({
     getBannerUrl();
   }, [banner_url]);
   return (
-    <Link to={`/blog/${slug}`}>
+    <Link to={`/blogs/${slug}`}>
       <div className="card bg-base-100 shadow-xl">
         <figure className="h-32 flex items-center justify-center">
           {bannerUrl?.trim() ? (

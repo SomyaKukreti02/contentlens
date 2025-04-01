@@ -101,7 +101,7 @@ const BlogDetails = () => {
           </div>
           {/* <span className="divider"></span> */}
           {showControls && (
-            <Link to={`/blog/${blog.slug}/edit`}>
+            <Link to={`/blogs/${blog.slug}/edit`}>
               <button className="btn btn-secondary rounded-full absolute right-4 top-4 z-10 ">
                 Edit
               </button>

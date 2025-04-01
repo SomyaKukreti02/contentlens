@@ -50,10 +50,7 @@ const createBlog = async ({ title, slug, description, banner_url, status }) => {
 };
 
 // Update a blog
-const updateBlog = async (
-  id,
-  { title, slug, description, banner_url, status }
-) => {
+const updateBlog = async (id, { title, description, banner_url, status }) => {
   try {
     const prevData = await getBlogById(id);
 
@@ -65,7 +62,6 @@ const updateBlog = async (
       .from("blogs")
       .update({
         title,
-        slug,
         description,
         banner_url,
         status,

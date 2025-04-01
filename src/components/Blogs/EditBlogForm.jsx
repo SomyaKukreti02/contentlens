@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { uploadFile } from "@/supabase/services/storage.service";
 import { updateBlog } from "@/supabase/services/blogs.service";
-import { makeUrlFriendly } from "@/components/Blogs/utils";
 import { v4 as uuid } from "uuid";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
@@ -55,10 +54,8 @@ const EditBlogForm = ({ initialData }) => {
     }
 
     // Update the blog post
-    const formattedSlug = makeUrlFriendly(slug);
     await updateBlog(initialData.id, {
       title,
-      slug: formattedSlug,
       banner_url,
       description,
       status,
@@ -66,7 +63,7 @@ const EditBlogForm = ({ initialData }) => {
     });
     setSubmitting(false);
     if (status === "published") {
-      navigate(`/blogs/${formattedSlug}`);
+      navigate(`/blogs/${slug}`);
     }
     if (status === "draft") {
       navigate("/profile#draft");
