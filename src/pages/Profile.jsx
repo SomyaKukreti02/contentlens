@@ -31,7 +31,10 @@ const Profile = () => {
       <span className="divider my-16"></span>
       {/* Accordian */}
       <div className="join join-vertical w-full bg-base-200">
-        <div className="collapse collapse-arrow join-item border-base-300 border">
+        <div
+          id="draft"
+          className="collapse collapse-arrow join-item border-base-300 border"
+        >
           <input type="radio" name="blog_accordian" defaultChecked />
           <div className="collapse-title text-xl font-medium">
             Saved as draft :

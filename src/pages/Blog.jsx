@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router";
-import { getUser } from "@/supabase/services/auth.service";
+import { checkAuthorisation } from "@/components/Blogs/utils";
 import { getBlogBySlug } from "@/supabase/services/blogs.service";
 import { getPublicUrl } from "@/supabase/services/storage.service";
 import Loading from "./Loading";
@@ -10,18 +10,10 @@ const BlogDetails = () => {
   const [bannerUrl, setBannerUrl] = useState("");
   const [loading, setLoading] = useState(false);
   const [blog, setBlog] = useState(null);
-  const [isAuthorOfThisBlog, setIsAuthorOfThisBlog] = useState(false);
+  const [showControls, setShowControls] = useState(false);
   const [publishedAt, setPublishedAt] = useState("");
   const [initials, setInitials] = useState("");
-  const checkAuthorIsUser = async () => {
-    try {
-      const user = await getUser();
-      console.log("checkAuthIsUser: ", user);
-      setIsAuthorOfThisBlog(user.email === blog.author_email);
-    } catch (error) {
-      console.error("Error checking author: ", error.message);
-    }
-  };
+
   const fetchBlog = async (slug) => {
     try {
       const data = await getBlogBySlug(slug);
@@ -55,9 +47,15 @@ const BlogDetails = () => {
   }, [slug]);
 
   useEffect(() => {
+    const showControlsHandler = async () => {
+      const authorisation = await checkAuthorisation(blog.author_email);
+      if (authorisation) {
+        setShowControls(true);
+      }
+    };
     if (blog) {
       getBannerUrl();
-      checkAuthorIsUser();
+      showControlsHandler();
     }
   }, [blog]);
 
@@ -102,7 +100,7 @@ const BlogDetails = () => {
             ></article>
           </div>
           {/* <span className="divider"></span> */}
-          {isAuthorOfThisBlog && (
+          {showControls && (
             <Link to={`/blog/${blog.slug}/edit`}>
               <button className="btn btn-secondary rounded-full absolute right-4 top-4 z-10 ">
                 Edit

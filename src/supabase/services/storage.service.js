@@ -30,4 +30,15 @@ const getPublicUrl = async (path) => {
   }
 };
 
-export { uploadFile, getPublicUrl };
+const deleteFile = async (path) => {
+  try {
+    const { error } = await supabase.storage.from("blogs").remove([path]);
+    if (error) {
+      throw error;
+    }
+  } catch (error) {
+    console.log("Error deleting file: ", error.message);
+  }
+};
+
+export { uploadFile, getPublicUrl, deleteFile };

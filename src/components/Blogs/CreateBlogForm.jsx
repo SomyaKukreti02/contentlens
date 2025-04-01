@@ -1,6 +1,8 @@
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
+import { useNavigate } from "react-router";
+import { makeUrlFriendly } from "@/components/Blogs/utils";
 import { uploadFile } from "@/supabase/services/storage.service";
 import { createBlog } from "@/supabase/services/blogs.service";
 import { v4 as uuid } from "uuid";
@@ -11,6 +13,7 @@ import { CATEGORIES } from "@/constants";
 
 const BlogForm = ({ initialData = {} }) => {
   const [submitting, setSubmitting] = useState(false);
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -55,15 +58,22 @@ const BlogForm = ({ initialData = {} }) => {
     }
 
     // Create the blog post
+    const formattedSlug = makeUrlFriendly(slug);
     await createBlog({
       title,
-      slug: makeUrlFriendly(slug),
+      slug: formattedSlug,
       banner_url,
       description,
       status,
       category,
     });
     setSubmitting(false);
+    if (status === "published") {
+      navigate(`/blogs/${formattedSlug}`);
+    }
+    if (status === "draft") {
+      navigate("/profile#draft");
+    }
   };
 
   return (
@@ -143,13 +153,6 @@ const BlogForm = ({ initialData = {} }) => {
 
       <div className="flex justify-end mt-4 max-w-5xl gap-4">
         <button
-          type="button"
-          className="btn btn-circle btn-outline btn-secondary"
-          disabled={submitting}
-        >
-          <i className="bx bx-show text-2xl"></i>
-        </button>
-        <button
           type="submit"
           className="btn btn-outline btn-secondary"
           onClick={() => setValue("status", "draft")}
@@ -172,15 +175,6 @@ const BlogForm = ({ initialData = {} }) => {
 
 BlogForm.propTypes = {
   initialData: PropTypes.object,
-};
-
-const makeUrlFriendly = (input) => {
-  return input
-    .trim()
-    .toLowerCase()
-    .replace(/\s+/g, "-")
-    .replace(/[^a-z0-9-_~.%]/g, "")
-    .replace(/--+/g, "-");
 };
 
 export default BlogForm;

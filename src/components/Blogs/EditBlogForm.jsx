@@ -1,8 +1,10 @@
 import PropTypes from "prop-types";
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 import { uploadFile } from "@/supabase/services/storage.service";
 import { updateBlog } from "@/supabase/services/blogs.service";
+import { makeUrlFriendly } from "@/components/Blogs/utils";
 import { v4 as uuid } from "uuid";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
@@ -11,6 +13,7 @@ import { CATEGORIES } from "@/constants";
 
 const EditBlogForm = ({ initialData }) => {
   const [submitting, setSubmitting] = useState(false);
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -52,16 +55,22 @@ const EditBlogForm = ({ initialData }) => {
     }
 
     // Update the blog post
+    const formattedSlug = makeUrlFriendly(slug);
     await updateBlog(initialData.id, {
       title,
-      slug: makeUrlFriendly(slug),
+      slug: formattedSlug,
       banner_url,
       description,
       status,
-      category, // Include category when updating
+      category,
     });
-
     setSubmitting(false);
+    if (status === "published") {
+      navigate(`/blogs/${formattedSlug}`);
+    }
+    if (status === "draft") {
+      navigate("/profile#draft");
+    }
   };
 
   return (
@@ -144,10 +153,19 @@ const EditBlogForm = ({ initialData }) => {
       <div className="flex justify-end mt-4 max-w-5xl gap-4">
         <button
           type="submit"
-          className="btn btn-secondary"
+          className="btn btn-outline btn-secondary"
+          onClick={() => setValue("status", "draft")}
           disabled={submitting}
         >
-          Update
+          Save as draft
+        </button>
+        <button
+          type="submit"
+          className="btn btn-secondary"
+          onClick={() => setValue("status", "published")}
+          disabled={submitting}
+        >
+          Publish
         </button>
       </div>
     </form>
@@ -156,15 +174,6 @@ const EditBlogForm = ({ initialData }) => {
 
 EditBlogForm.propTypes = {
   initialData: PropTypes.object,
-};
-
-const makeUrlFriendly = (input) => {
-  return input
-    .trim()
-    .toLowerCase()
-    .replace(/\s+/g, "-")
-    .replace(/[^a-z0-9-_~.%]/g, "")
-    .replace(/--+/g, "-");
 };
 
 export default EditBlogForm;

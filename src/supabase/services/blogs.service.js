@@ -1,5 +1,6 @@
 import supabase from "@/supabase/client";
 import { getSession } from "@/supabase/services/auth.service";
+import { deleteFile } from "@/supabase/services/storage.service";
 
 // Get author details
 const getAuthor = async () => {
@@ -54,6 +55,12 @@ const updateBlog = async (
   { title, slug, description, banner_url, status }
 ) => {
   try {
+    const prevData = await getBlogById(id);
+
+    if (!prevData) {
+      throw new Error("Blog not found");
+    }
+
     const { data, error } = await supabase
       .from("blogs")
       .update({
@@ -65,6 +72,15 @@ const updateBlog = async (
       })
       .eq("id", id)
       .select();
+
+    if (banner_url !== prevData[0].banner_url) {
+      console.log("Deleting previous banner");
+      const { error } = await deleteFile(prevData[0].banner_url);
+      if (error) {
+        throw new Error(error.message);
+      }
+    }
+
     if (error) {
       throw new Error(error.message);
     }
@@ -87,7 +103,7 @@ const deleteBlog = async (id) => {
     }
     return data;
   } catch (error) {
-    console.error("Error updating blog:", error.message);
+    console.error("Error deleting blog:", error.message);
   }
 };
 
@@ -150,6 +166,19 @@ const getBlogBySlug = async (slug) => {
       .from("blogs")
       .select()
       .eq("slug", slug);
+    if (error) {
+      throw new Error(error.message);
+    }
+    return data;
+  } catch (error) {
+    console.error("Error getting user blogs:", error.message);
+  }
+};
+
+// Get blog by id
+const getBlogById = async (id) => {
+  try {
+    const { data, error } = await supabase.from("blogs").select().eq("id", id);
     if (error) {
       throw new Error(error.message);
     }
